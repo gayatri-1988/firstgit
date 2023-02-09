@@ -7,12 +7,14 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 	<flow name="flowFlow" doc:id="1f6245d7-f213-447e-af5d-c436a57bbdd6" >
 		<http:listener doc:name="Listener" doc:id="4de332a8-d79f-4e05-bf73-c155ecbb7f0f" config-ref="HTTP_Listener_config" path="/flow"/>
 		<logger level="INFO" doc:name="Logger" doc:id="b5d87b72-8bec-475e-bfd8-6e6bed551d4e" message="====first logger==="/>
+		<set-variable value="a=10" doc:name="Set Variable" doc:id="298a5db1-57f1-44a1-ba41-229e346c8edc" variableName="mainvar"/>
 		<set-payload value=" before sub flow --&gt;&gt;payload" doc:name="Set Payload" doc:id="71cd67f8-baa6-453e-90d2-c822493d4f34" />
 		<flow-ref doc:name="Flow Reference" doc:id="cbfccb3d-ff15-4363-8f93-2046fe7e7ca3" name="flowSub_Flow"/>
-		<logger level="INFO" doc:name="Logger" doc:id="d567603e-6fd2-4f63-98b7-addd11e4e6ac" message="====second logger created===== #[payload]"/>
+		<logger level="INFO" doc:name="Logger" doc:id="d567603e-6fd2-4f63-98b7-addd11e4e6ac" message="====second main flow logger created===== #[payload] sub setvar is: #[vars.subvar]"/>
 	</flow>
 	<sub-flow name="flowSub_Flow" doc:id="e18f4ee5-d9a7-40f6-923d-7941974c94bd" >
-		<logger level="INFO" doc:name="Logger" doc:id="88eaa59a-e8cd-479a-8232-4defa44f4abc" message="====sub flow created using flow reference=====  #[payload]"/>
-		<set-payload value="sub flow payload created...!!!" doc:name="Set Payload" doc:id="8ef217e2-78a2-41dc-aeef-8cc2a08a5bf3" />
+		<logger level="INFO" doc:name="Logger" doc:id="88eaa59a-e8cd-479a-8232-4defa44f4abc" message="====sub flow created using flow reference=====  #[payload]  set variable value #[vars.mainvar]"/>
+		<set-variable value="b=20" doc:name="subvar" doc:id="ccd434d5-9aad-4063-b648-246c19e1f17e" variableName="subvar"/>
+		<set-payload value="sub flow payload created...and set variable value..!!! " doc:name="Set Payload" doc:id="8ef217e2-78a2-41dc-aeef-8cc2a08a5bf3" />
 	</sub-flow>
 </mule>
