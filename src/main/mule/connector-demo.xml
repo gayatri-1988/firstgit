@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="connector-demoFlow" doc:id="fe31454b-347a-4bba-af3f-1e8a27985192" >
+		<http:listener doc:name="Listener" doc:id="6f07ced4-04e3-49e4-a294-7ece708956d3" config-ref="HTTP_Listener_config" path="/route"/>
+		<ee:transform doc:name="Transform Message" doc:id="6c53b453-8c11-464d-9a00-8ceb1f477891" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+attributes.queryParams.username
+]]></ee:set-payload>
+				<ee:set-attributes ><![CDATA[%dw 2.0
+output application/json
+---
+attributes.queryParams.username]]></ee:set-attributes>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="fc524954-ed69-41b3-a85d-dc4dd4b322a1" message='#[message.attributes]'/>
+		<ee:transform doc:name="Transform Message" doc:id="4338d976-7b7a-4ea3-ad4c-19a45db05720" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	response: message.attributes 
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<choice doc:name="Choice" doc:id="b5dd6e64-1ed5-4261-a985-cafa5c73d231" >
+			<when expression='message.attributes == "mulesoft"'>
+				<logger level="INFO" doc:name="Logger" doc:id="d5d0092b-21d2-4cb4-ac15-24fb98eb8ed6" message='====  "mulesoft selected"====='/>
+			</when>
+			<when expression='message.attributes == "java"'>
+				<logger level="INFO" doc:name="Logger" doc:id="324b90eb-8455-4396-8c23-ef0c84cfaee1" message="====java selected===="/>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Logger" doc:id="8c38470c-1886-4dbe-b300-4faf12ce5b56" message="====default selected===="/>
+			</otherwise>
+		</choice>
+	</flow>
+</mule>

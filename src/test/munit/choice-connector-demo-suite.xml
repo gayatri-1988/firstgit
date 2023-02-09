@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="choice-connector-demo-suite.xml" />
+	<munit:test name="connector-demoFlow-test1" doc:id="35945780-d6c3-461a-8370-b52a71492236" >
+		<munit:behavior >
+			<munit:set-event doc:name="Set Input" doc:id="4b3b8759-35a1-46e9-b39e-aa51cffebcfa" >
+				<munit:payload value="#[readUrl('classpath://connectordemoFlowtest1\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://connectordemoFlowtest1\set-event_attributes.dwl')]" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to connector-demoFlow" doc:id="2bc225d6-80ac-4566-ac1b-f5a1e929f3e7" name="connector-demoFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="37e66314-76da-430e-a9d2-54edbebf6762" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import connectordemoFlowtest1::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:assert doc:name="Assert attributes" doc:id="03c057cc-1e29-4800-bb2c-8a83b6a4fc91" message="The attributes do not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import connectordemoFlowtest1::assert_expression_attributes
+---
+assert_expression_attributes::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>
